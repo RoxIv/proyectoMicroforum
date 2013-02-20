@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+   <h:head>
+   	<link href="./css/generalStyle.css" 
+      		rel="stylesheet" type="text/css"/>
+   </h:head>   
+   <h:body>
+   		<div align="center">
+		<fieldset>
+		<legend>Nueva Encuesta</legend>
+		<h:form>
+			<h:panelGrid columns="3">
+				Nombre encuesta <h:inputText
+				 id="nombreE" 
+				 value="#{encuestaSesion.nombre}"
+				 validator="#{encuestaSesion.validarNombre}"
+				 /><h:message styleClass="error" for="nombreE"/>
+				Proposito Encuesta <h:inputTextarea cols="15" rows="5" id="propositoE" value="#{encuestaSesion.proposito}" /><h:message for="propositoE"/>
+				Valore su importancia (1-10) <h:inputText id="importanciaE" value="#{encuestaSesion.valoracion}" /><h:message for="valoracionE"/>
+			</h:panelGrid>
+			<h:commandButton value="Crear Encuesta"  actionListener="#{encuestaSesion.iniciarEncuesta}" />
+		</h:form>
+		</fieldset>
+		</div>
+   </h:body>
+      
+</html>
+      
