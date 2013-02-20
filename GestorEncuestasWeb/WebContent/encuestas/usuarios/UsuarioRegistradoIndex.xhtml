@@ -5,8 +5,15 @@
 	#{userBean.loginName}<br/>
 	#{userBean.user.nombre}<br/>
 	#{userBean.user.apellido1}<br/>
-	<h:selectOneMenu id="menu" value="#{tareasAdministracion}">
-		<f:selectItems value="#{tareasAdministracion.adminTasks}"></f:selectItems>
-	</h:selectOneMenu><br></br>
+	<fieldset>
+			<legend>Encuestas disponibles</legend>
+			<h:form>
+				<h:selectOneMenu valueChangeListener="#{encuestaSesion.selectEncuesta}" >
+					<f:selectItems value="#{bancoEncuestas.arrayEncuestas}" />
+				</h:selectOneMenu>
+				<!--  <h:commandButton value="añadir a Encuesta"  actionListener="#{encuestaSesion.addPregunta}" />-->
+			</h:form>
+		</fieldset>
+	
 	<a href="/GestorEncuestasWeb/encuestas/administracion/inicioRealizacionEncuesta.jsf">realizar encuesta</a>	
 </html>

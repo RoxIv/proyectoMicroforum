@@ -34,6 +34,7 @@ import com.microforum.gestorencuestaweb.entities.Pregunta;
 @ManagedBean
 @SessionScoped
 public class EncuestaSesion {
+	
 	private List<String> preguntasEncuesta=new ArrayList<String>();
 	private List<RegistroEncuesta> registrosEncuesta=
 			new ArrayList<RegistroEncuesta>();
@@ -210,5 +211,18 @@ public class EncuestaSesion {
 		//preguntasEncuesta.add((String) e.getNewValue());
 	}
 	
+	public void selectEncuesta(ValueChangeEvent e){
+		System.out.println(e.getNewValue());
+		System.out.println("Selecionando encuesta");
+		String ref=(String) e.getNewValue();
+		Configuration conf=new Configuration();
+		SessionFactory sf=conf.configure().buildSessionFactory();
+		Session session=sf.openSession();
+		Query query=session.createQuery("from Encuesta");
+		List<Encuesta> encuestas=query.list();
+		session.close();
+		
+		
+	}
 
 }
