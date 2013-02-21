@@ -2,6 +2,7 @@ package com.microforum.gestorencuestaweb.beans;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,11 @@ import org.hibernate.cfg.Configuration;
 
 import com.microforum.gestorencuestaweb.entities.Administrador;
 import com.microforum.gestorencuestaweb.entities.Encuesta;
+import com.microforum.gestorencuestaweb.entities.EventoEncuesta;
 import com.microforum.gestorencuestaweb.entities.Pregunta;
+import com.microforum.gestorencuestaweb.entities.RegistroRespuestaEncuesta;
+import com.microforum.gestorencuestaweb.entities.Usuario;
+import com.microforum.gestorencuestaweb.entities.UsuarioRegistrado;
 
 
 @ManagedBean
@@ -36,6 +41,7 @@ import com.microforum.gestorencuestaweb.entities.Pregunta;
 public class EncuestaSesion {
 	
 	private List<String> preguntasEncuesta=new ArrayList<String>();
+	private List<Pregunta> preguntasaContestar = new ArrayList<Pregunta>();
 	private List<RegistroEncuesta> registrosEncuesta=
 			new ArrayList<RegistroEncuesta>();
 	private String nuevaPregunta="";
@@ -43,6 +49,9 @@ public class EncuestaSesion {
 	private String proposito;
 	private String nombre;
 	private int valoracion;
+	private Encuesta encuesta;
+	private EventoEncuesta evento= new EventoEncuesta();
+	private List<RegistroRespuestaEncuesta> respuestas = new ArrayList<RegistroRespuestaEncuesta>();
 	
 	private List<String> getRefList(List<RegistroEncuesta> regList){
 		List<String> refList=new ArrayList<String>();
@@ -137,6 +146,9 @@ public class EncuestaSesion {
 		//agregar control de navegacion
 		return "resumenEncuesta";
 	}
+	public String realizarEncuesta(){
+		return "inicioRealizacionEncuesta";
+	}
 	
 	public void salvarEncuesta(){
 		Configuration conf=new Configuration();
@@ -191,6 +203,33 @@ public class EncuestaSesion {
 		System.out.println("ActionEvent");
 	}
 	
+	
+	public EventoEncuesta getEvento() {
+		return evento;
+	}
+	public void setEvento(EventoEncuesta evento) {
+		this.evento = evento;
+	}
+	public Encuesta getEncuesta() {
+		return encuesta;
+	}
+	public void setEncuesta(Encuesta encuesta) {
+		this.encuesta = encuesta;
+	}
+	
+	public List<Pregunta> getPreguntasaContestar() {
+		return preguntasaContestar;
+	}
+	public void setPreguntasaContestar(List<Pregunta> preguntasaContestar) {
+		this.preguntasaContestar = preguntasaContestar;
+	}
+	
+	public List<RegistroRespuestaEncuesta> getRespuestas() {
+		return respuestas;
+	}
+	public void setRespuestas(List<RegistroRespuestaEncuesta> respuestas) {
+		this.respuestas = respuestas;
+	}
 	public void selectPregunta(ValueChangeEvent e){
 		System.out.println(e.getNewValue());
 		System.out.println("ValueChangeEvent");
@@ -212,16 +251,34 @@ public class EncuestaSesion {
 	}
 	
 	public void selectEncuesta(ValueChangeEvent e){
-		System.out.println(e.getNewValue());
+		//System.out.println(e.getNewValue());
 		System.out.println("Selecionando encuesta");
 		String ref=(String) e.getNewValue();
 		Configuration conf=new Configuration();
 		SessionFactory sf=conf.configure().buildSessionFactory();
 		Session session=sf.openSession();
-		Query query=session.createQuery("from Encuesta");
-		List<Encuesta> encuestas=query.list();
-		session.close();
+		encuesta=(Encuesta)session.get(Encuesta.class, ref);
+		Collection<Pregunta>preguntasSel=encuesta.getPreguntas();
+		for(Pregunta p:preguntasSel){
+			preguntasaContestar.add(p);
+		}
 		
+		evento.setEncuesta(encuesta);
+		//obtener usuario encuestado
+		UIComponent component=e.getComponent();
+		component= component.findComponent("encuestado");
+		if(component!=null){
+			if(component instanceof UIParameter){
+				UIParameter parameter=(UIParameter)component;
+				UsuarioAutenticado usu=(UsuarioAutenticado) parameter.getValue();
+				UsuarioRegistrado encuestado =(UsuarioRegistrado) usu.getUser();
+				evento.setEncuestado(encuestado);
+			}
+		}
+		session.close();
+	}
+	public String contestarEncuesta(){
+		return "encuestaCompletada";
 		
 	}
 

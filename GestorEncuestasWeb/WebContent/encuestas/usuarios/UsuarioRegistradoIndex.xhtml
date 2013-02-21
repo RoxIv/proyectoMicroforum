@@ -9,11 +9,11 @@
 			<legend>Encuestas disponibles</legend>
 			<h:form>
 				<h:selectOneMenu valueChangeListener="#{encuestaSesion.selectEncuesta}" >
-					<f:selectItems value="#{bancoEncuestas.arrayEncuestas}" />
-				</h:selectOneMenu>
-				<!--  <h:commandButton value="añadir a Encuesta"  actionListener="#{encuestaSesion.addPregunta}" />-->
+					<f:selectItems value="#{bancoEncuestas.encuestaItems}" />
+					<f:param id="encuestado" value="#{userBean}"></f:param>
+				</h:selectOneMenu><br></br>
+				<h:commandButton value="Realizar encuesta" action="#{encuestaSesion.realizarEncuesta}" />	
 			</h:form>
 		</fieldset>
-	
-	<a href="/GestorEncuestasWeb/encuestas/administracion/inicioRealizacionEncuesta.jsf">realizar encuesta</a>	
+	<!--  <a href="/GestorEncuestasWeb/encuestas/usuarios/inicioRealizacionEncuesta.jsf">realizar encuesta</a>	-->
 </html>
